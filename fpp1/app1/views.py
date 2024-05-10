@@ -1,4 +1,4 @@
-from .models import Stage
+from .models import Stage, Answer
 from django.http import JsonResponse
 import hashlib
 
@@ -10,7 +10,7 @@ def GetAllStages(request):
         for i in stages:
             stage = {}
             stage_id = i.id
-            substages = Stage.objects.filter(id=stage_id)
+            substages = Stage.objects.filter(other_model=stage_id)
             substages_list = []
             stage['id'] = stage_id
             stage['title'] = i.title
@@ -31,16 +31,18 @@ def GetQuestionsByStage(request, pk):
     if request.method == 'GET':
         try:
             stage = Stage.objects.get(id=pk)
+            answers = Answer.objects.filter(stage= stage)
         except BaseException:
-            return JsonResponse({'error': 'This stage not exist'}, status=400)
-        if not stage.question:
-            return JsonResponse({'error': 'No question'}, status=400)
-        answer_string = stage.answer.encode('utf-8')
-        hash_answer = hashlib.sha256(answer_string)
+            return JsonResponse({'error': 'This stage not exist or has no answers'}, status=400)
+        ans_list = []
+        for i in answers:
+            print('PIPIPUPU')
+            print('hash:' + i.answer_hash)
+            ans_list.append(i.answer_hash)
         stage_data = {
             'id': pk,
             'guestion': stage.question,
-            'answer': hash_answer.hexdigest()
+            'answers': ans_list
         }
         return JsonResponse(stage_data, status=200)
     else:
