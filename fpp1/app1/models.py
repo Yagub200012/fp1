@@ -15,7 +15,6 @@ class Stage(models.Model):
         verbose_name = 'Stage'
         verbose_name_plural = 'Stages'
 
-import hashlib
 
 class Answer(models.Model):
     stage = models.ForeignKey(Stage, verbose_name="Stage link", on_delete=models.CASCADE)
