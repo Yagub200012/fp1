@@ -36,8 +36,6 @@ def GetQuestionsByStage(request, pk):
             return JsonResponse({'error': 'This stage not exist or has no answers'}, status=400)
         ans_list = []
         for i in answers:
-            print('PIPIPUPU')
-            print('hash:' + i.answer_hash)
             ans_list.append(i.answer_hash)
         stage_data = {
             'id': pk,
