@@ -31,14 +31,17 @@ def GetQuestionsByStage(request, pk):
     if request.method == 'GET':
         try:
             stage = Stage.objects.get(id=pk)
-            answers = Answer.objects.filter(stage= stage)
         except BaseException:
-            return JsonResponse({'error': 'This stage not exist or has no answers'}, status=400)
+            return JsonResponse({'error': 'This stage not exist'}, status=400)
+        answers = Answer.objects.filter(stage=stage)
+        if not answers:
+            return JsonResponse({'error': 'No answers found for this stage'}, status=400)
         ans_list = []
         for i in answers:
             ans_list.append(i.answer_hash)
         stage_data = {
             'id': pk,
+            'title': stage.title,
             'guestion': stage.question,
             'answers': ans_list
         }
@@ -46,4 +49,3 @@ def GetQuestionsByStage(request, pk):
     else:
         JsonResponse({'error': 'Method not allowed'}, status=405)
 
-# Create your views here.
