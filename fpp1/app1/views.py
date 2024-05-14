@@ -1,6 +1,5 @@
 from .models import Stage, Answer
 from django.http import JsonResponse
-import hashlib
 
 
 def GetAllStages(request):
@@ -24,7 +23,7 @@ def GetAllStages(request):
             stage_list.append(stage)
         return JsonResponse({'stage_list': stage_list}, status=200)
     else:
-        JsonResponse({'error': 'Method not allowed'}, status=405)
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 def GetQuestionsByStage(request, pk):
@@ -47,5 +46,5 @@ def GetQuestionsByStage(request, pk):
         }
         return JsonResponse(stage_data, status=200)
     else:
-        JsonResponse({'error': 'Method not allowed'}, status=405)
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
