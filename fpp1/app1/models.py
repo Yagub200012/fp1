@@ -5,7 +5,7 @@ import hashlib
 class Stage(models.Model):
     other_model = models.ForeignKey('self', verbose_name="Main stage link", on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=3000)
-    question = models.TextField(blank=True, null=True)
+    # question = models.TextField(blank=True, null=True)
     # answer = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -16,8 +16,15 @@ class Stage(models.Model):
         verbose_name_plural = 'Stages'
 
 
-class Answer(models.Model):
+class Question(models.Model):
     stage = models.ForeignKey(Stage, verbose_name="Stage link", on_delete=models.CASCADE)
+    question_text = models.TextField()
+
+    def __str__(self):
+        return self.question_text
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, verbose_name="Question link", on_delete=models.CASCADE)
     answer_text = models.TextField()
     answer_hash = models.TextField(blank=True, editable=False)
 

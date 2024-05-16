@@ -1,4 +1,4 @@
-from .models import Stage, Answer
+from .models import Stage, Answer, Question
 from django.http import JsonResponse
 
 
@@ -32,17 +32,25 @@ def GetQuestionsByStage(request, pk):
             stage = Stage.objects.get(id=pk)
         except BaseException:
             return JsonResponse({'error': 'This stage not exist'}, status=400)
-        answers = Answer.objects.filter(stage=stage)
-        if not answers:
-            return JsonResponse({'error': 'No answers found for this stage'}, status=400)
-        ans_list = []
-        for i in answers:
-            ans_list.append(i.answer_hash)
+        questions = Question.objects.filter(stage=stage)
+        if not questions:
+            return JsonResponse({'error': 'No questions found for this stage'}, status=400)
+        questions_list = []
+        for i in questions:
+            ans_list = []
+            question = {
+                'question_text': i.question_text
+            }
+            answers = Answer.objects.filter(question=i)
+            if answers:
+                for j in answers:
+                    ans_list.append(j.answer_hash)
+            question['answers'] = ans_list
+            questions_list.append(question)
         stage_data = {
             'id': pk,
             'title': stage.title,
-            'guestion': stage.question,
-            'answers': ans_list
+            'guestions': questions_list,
         }
         return JsonResponse(stage_data, status=200)
     else:
