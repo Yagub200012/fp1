@@ -16,9 +16,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from . import views
+from .views import StageListCreateView, SubtageDetailView
 
 urlpatterns = [
-    path('GetAllStages/', views.GetAllStages),
-    path('GetQuestionsByStage/<int:pk>', views.GetQuestionsByStage),
+    path('GetAllStages/', StageListCreateView.as_view(), name='rank-list'),
+    path('GetQuestionsByStage/<int:pk>',  SubtageDetailView.as_view(), name='rank-list'),
 ]
